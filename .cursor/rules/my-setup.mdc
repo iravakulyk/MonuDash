@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+I run on windows but want you to use WSL for every command that you type.
+
+The current date is summer 2025.
+You sometimes fail to fetch the right version of tool, libraries. Make sure to always use the latest version, often that means not specifiying a version at all.
