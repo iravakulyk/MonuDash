@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 from models.monument import Monument
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import os
 
 app = FastAPI()
@@ -17,19 +18,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Get paths from environment variables or use defaults
+STATIC_DIR = os.getenv('STATIC_DIR', os.path.join(os.path.dirname(os.path.abspath(__file__)), "static"))
+RESOURCES_DIR = os.getenv('RESOURCES_DIR', os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "resources"))
+
 # Serve static files (frontend)
-static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
-app.mount("/static", StaticFiles(directory=static_dir, html=True), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR, html=True), name="static")
 
 @app.get("/")
 async def get_root():
-    return FileResponse(os.path.join(static_dir, "index.html"))
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.get("/api/monuments")
 async def get_monuments() -> list[Monument]:
-    # Get the absolute path to the resources directory
-    base_dir = Path(__file__).resolve().parent.parent
-    csv_path = base_dir / 'resources' / 'monuments_with_coordinates.csv'
+    # Use the environment variable for resources path
+    csv_path = os.path.join(RESOURCES_DIR, 'monuments_with_coordinates.csv')
 
     # Read the CSV file with coordinates
     df = pd.read_csv(csv_path)
@@ -52,8 +55,7 @@ async def get_monuments() -> list[Monument]:
 
 @app.get("/api/monuments/{monument_id}")
 async def get_monument(monument_id: str) -> Monument:
-    base_dir = Path(__file__).resolve().parent.parent
-    csv_path = base_dir / 'resources' / 'monuments_with_coordinates.csv'
+    csv_path = os.path.join(RESOURCES_DIR, 'monuments_with_coordinates.csv')
     df = pd.read_csv(csv_path)
     row = df[df['FID'].astype(str) == monument_id]
     if row.empty:

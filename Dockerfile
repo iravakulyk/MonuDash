@@ -34,6 +34,11 @@ COPY backend/ .
 
 # Copy frontend build output to /app/static
 COPY --from=frontend-build /frontend/dist /app/static
+COPY resources/monuments_with_coordinates.csv /app/resources/
+
+# Set backend environment variables
+ENV STATIC_DIR=/app/static \
+    RESOURCES_DIR=/app/resources
 
 # Expose port (adjust if your app uses a different port)
 EXPOSE 8000
