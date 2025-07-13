@@ -72,8 +72,8 @@ These 3D models are released under an open-source license (specify license) with
 
 ### Prerequisites
 - Node.js and npm for frontend development
-- Python 3.x for backend development
-- Poetry (recommended) for Python dependency management
+- Python 3.12 for backend development
+- uv for Python dependency management (install with: `curl -LsSf https://astral.sh/uv/install.sh | bash`)
 - Git LFS (Large File Storage) for handling 3D models and large assets
 
 Note: This repository uses Git LFS to manage large files like 3D models (.blend, .glb) and images. Make sure to install Git LFS before cloning the repository to properly download all assets.

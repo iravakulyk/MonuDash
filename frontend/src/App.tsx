@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './utils/leaflet-icons'
 import './App.css'
+import { useMap } from 'react-leaflet';
+import { useRef } from 'react';
 
 interface Monument {
   id: string;
@@ -14,10 +16,57 @@ interface Monument {
   lng: number | null;
 }
 
+function MonumentMarker({ monument, onClick }: { monument: Monument, onClick: (monument: Monument) => void }) {
+  const popupRef = useRef(null);
+  const map = useMap();
+
+  return (
+    <Marker
+      position={[monument.lat!, monument.lng!]}
+      eventHandlers={{
+        click: () => onClick(monument),
+        mouseover: () => {
+          if (popupRef.current) {
+            // @ts-ignore
+            popupRef.current.openOn(map);
+          }
+        },
+        mouseout: () => {
+          if (popupRef.current) {
+            // @ts-ignore
+            popupRef.current._close();
+          }
+        },
+      }}
+    >
+      <Popup ref={popupRef}>
+        <div>
+          <h3>{monument.lage}</h3>
+        </div>
+      </Popup>
+    </Marker>
+  );
+}
+
+function MonumentDetailsPanel({ monument, onClose }: { monument: Monument, onClose: () => void }) {
+  return (
+    <div style={{ flex: 1, background: '#fff', borderLeft: '1px solid #ccc', padding: '2rem', overflowY: 'auto', height: '100%', minWidth: 300 }}>
+      <button style={{ float: 'right', fontSize: '1.2rem' }} onClick={onClose}>&times;</button>
+      <h2>{monument.lage}</h2>
+      <p><strong>Art:</strong> {monument.denkmalart}</p>
+      <p><strong>Denkmalnummer:</strong> {monument.denkmalnummer}</p>
+      <a href={monument.link} target="_blank" rel="noopener noreferrer">
+        More details
+      </a>
+    </div>
+  );
+}
+
 function App() {
   const [monuments, setMonuments] = useState<Monument[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedMonument, setSelectedMonument] = useState<Monument | null>(null);
 
   useEffect(() => {
     const fetchMonuments = async () => {
@@ -47,39 +96,28 @@ function App() {
   }
 
   return (
-    <div style={{ height: '100vh', width: '100vw', margin: 0, padding: 0, overflow: 'hidden' }}>
-      <MapContainer 
-        center={[50.7753, 6.0839]} // Aachen coordinates
-        zoom={13} 
-        style={{ height: '100%', width: '100%' }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {monuments.map(monument => {
-          if (monument.lat && monument.lng) {
-            return (
-              <Marker 
-                key={monument.id} 
-                position={[monument.lat, monument.lng]}
-              >
-                <Popup>
-                  <div>
-                    <h3>{monument.denkmalnummer}</h3>
-                    <p>{monument.denkmalart}</p>
-                    <p>{monument.lage}</p>
-                    <a href={monument.link} target="_blank" rel="noopener noreferrer">
-                      More details
-                    </a>
-                  </div>
-                </Popup>
-              </Marker>
-            );
-          }
-          return null;
-        })}
-      </MapContainer>
+    <div style={{ display: 'flex', height: '100vh', width: '100vw', margin: 0, padding: 0, overflow: 'hidden' }}>
+      <div style={{ flex: 2, transition: 'flex 0.3s', height: '100%' }}>
+        <MapContainer
+          center={[50.7753, 6.0839]} // Aachen coordinates
+          zoom={13}
+          style={{ height: '100%', width: '100%' }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {monuments.map(monument => {
+            if (monument.lat && monument.lng) {
+              return <MonumentMarker key={monument.id} monument={monument} onClick={setSelectedMonument} />;
+            }
+            return null;
+          })}
+        </MapContainer>
+      </div>
+      {selectedMonument && (
+        <MonumentDetailsPanel monument={selectedMonument} onClose={() => setSelectedMonument(null)} />
+      )}
     </div>
   );
 }
