@@ -31,11 +31,9 @@ async def get_monuments() -> list[Monument]:
     base_dir = Path(__file__).resolve().parent.parent
     csv_path = base_dir / 'resources' / 'monuments_with_coordinates.csv'
 
-    print(csv_path)
-    
     # Read the CSV file with coordinates
     df = pd.read_csv(csv_path)
-    
+
     # Convert DataFrame to list of Monument objects
     monuments = [
         Monument(

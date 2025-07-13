@@ -1,0 +1,11 @@
+**/__pycache__
+**/.git
+**/.gitignore
+**/.env
+**/.venv
+**/node_modules
+frontend/dist
+**/*.pyc
+resources/StudentWorks
+.vscode
+.idea 
