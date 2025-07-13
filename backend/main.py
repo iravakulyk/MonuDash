@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from pathlib import Path
 from models.monument import Monument
+from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
@@ -15,11 +17,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Serve static files (frontend)
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+app.mount("/static", StaticFiles(directory=static_dir, html=True), name="static")
+
+@app.get("/")
+async def get_root():
+    return FileResponse(os.path.join(static_dir, "index.html"))
+
 @app.get("/api/monuments")
 async def get_monuments() -> list[Monument]:
     # Get the absolute path to the resources directory
     base_dir = Path(__file__).resolve().parent.parent
     csv_path = base_dir / 'resources' / 'monuments_with_coordinates.csv'
+
+    print(csv_path)
     
     # Read the CSV file with coordinates
     df = pd.read_csv(csv_path)
@@ -59,6 +71,7 @@ async def get_monument(monument_id: str) -> Monument:
         lng=row['lng'] if pd.notna(row['lng']) else None,
     )
 
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

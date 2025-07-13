@@ -71,7 +71,7 @@ function App() {
   useEffect(() => {
     const fetchMonuments = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/monuments');
+        const response = await fetch('/api/monuments');
         if (!response.ok) {
           throw new Error('Failed to fetch monuments');
         }
