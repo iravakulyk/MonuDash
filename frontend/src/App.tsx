@@ -5,6 +5,7 @@ import './utils/leaflet-icons'
 import './App.css'
 import { useMap } from 'react-leaflet';
 import { useRef } from 'react';
+import ModelViewer from './components/ModelViewer';
 
 interface Monument {
   id: string;
@@ -14,6 +15,7 @@ interface Monument {
   link: string;
   lat: number | null;
   lng: number | null;
+  modelPath?: string; // Added modelPath to the Monument interface
 }
 
 function MonumentMarker({ monument, onClick }: { monument: Monument, onClick: (monument: Monument) => void }) {
@@ -34,7 +36,7 @@ function MonumentMarker({ monument, onClick }: { monument: Monument, onClick: (m
         mouseout: () => {
           if (popupRef.current) {
             // @ts-ignore
-            popupRef.current._close();
+            popupRef.current.close();
           }
         },
       }}
@@ -49,6 +51,9 @@ function MonumentMarker({ monument, onClick }: { monument: Monument, onClick: (m
 }
 
 function MonumentDetailsPanel({ monument, onClose }: { monument: Monument, onClose: () => void }) {
+  // Use the full URL path for the model, accounting for Vite's base URL
+  const modelUrl = new URL('/static/models/468916_DCLB_Uebung3.glb', window.location.origin).href;
+
   return (
     <div style={{ flex: 1, background: '#fff', borderLeft: '1px solid #ccc', padding: '2rem', overflowY: 'auto', height: '100%', minWidth: 300 }}>
       <button style={{ float: 'right', fontSize: '1.2rem' }} onClick={onClose}>&times;</button>
@@ -58,6 +63,14 @@ function MonumentDetailsPanel({ monument, onClose }: { monument: Monument, onClo
       <a href={monument.link} target="_blank" rel="noopener noreferrer">
         More details
       </a>
+
+      {/* Always show the model viewer for testing */}
+      <div style={{ height: '400px', marginTop: '2rem' }}>
+        <ModelViewer modelPath={modelUrl} scale={1} />
+      </div>
+      <div>
+        Copyright: CC-BY Dezsö, Maximilian 2025.06.01
+      </div>
     </div>
   );
 }
