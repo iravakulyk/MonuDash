@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copy pyproject.toml and lock file first for dependency install
-COPY backend/pyproject.toml backend/uv.lock ./
+COPY backend/pyproject.toml backend/uv.lock backend/README.md ./
 
 # Install dependencies using uv
 ENV UV_LINK_MODE=copy
