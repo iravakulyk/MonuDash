@@ -1,7 +1,4 @@
-.PHONY: frontend backend all
-
-# Start both frontend and backend
-all: frontend backend
+.PHONY: frontend backend install
 
 # Start the frontend development server
 frontend:
@@ -9,11 +6,9 @@ frontend:
 
 # Start the backend server
 backend:
-	cd backend && uv run python main.py
+	cd backend && uv run python -m monudash.main
 
 # Install dependencies
 install:
 	cd frontend && npm install
-	cd backend && pip install -e .
-
-.DEFAULT_GOAL := all
+	cd backend && uv sync

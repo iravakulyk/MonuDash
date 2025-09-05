@@ -1,0 +1,5 @@
+---
+globs: *.py,backend/*
+alwaysApply: false
+---
+Use modern python typing.

@@ -19,10 +19,8 @@ MonuDash is an academic project that combines open data from the City of Aachen 
 ```
 MonuDash/
 ├── backend/           # FastAPI backend server
-│   ├── main.py       # Main application entry point
-│   └── scripts/      # Data enrichment scripts
-├── frontend/         # React frontend application
-└── resources/        # Data resources and 3D models
+├── frontend/          # React frontend application
+└── resources/         # Data resources and 3D models
     ├── denkmal_prodenkmal_csv.csv  # Raw monument data
     └── StudentWorks/               # 3D models created by RWTH students
 ```

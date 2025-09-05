@@ -9,10 +9,10 @@ import ModelViewer from './components/ModelViewer';
 
 interface Monument {
   id: string;
-  denkmalnummer: string;
-  denkmalart: string;
-  lage: string;
-  link: string;
+  official_id: string;
+  type: string;
+  address: string;
+  url: string;
   lat: number | null;
   lng: number | null;
   modelPath?: string; // Added modelPath to the Monument interface
@@ -43,7 +43,7 @@ function MonumentMarker({ monument, onClick }: { monument: Monument, onClick: (m
     >
       <Popup ref={popupRef}>
         <div>
-          <h3>{monument.lage}</h3>
+          <h3>{monument.address}</h3>
         </div>
       </Popup>
     </Marker>
@@ -57,10 +57,10 @@ function MonumentDetailsPanel({ monument, onClose }: { monument: Monument, onClo
   return (
     <div style={{ flex: 1, background: '#fff', borderLeft: '1px solid #ccc', padding: '2rem', overflowY: 'auto', height: '100%', minWidth: 300 }}>
       <button style={{ float: 'right', fontSize: '1.2rem' }} onClick={onClose}>&times;</button>
-      <h2>{monument.lage}</h2>
-      <p><strong>Art:</strong> {monument.denkmalart}</p>
-      <p><strong>Denkmalnummer:</strong> {monument.denkmalnummer}</p>
-      <a href={monument.link} target="_blank" rel="noopener noreferrer">
+      <h2>{monument.address}</h2>
+      <p><strong>Monument type:</strong> {monument.type}</p>
+      <p><strong>Monument ID:</strong> {monument.official_id}</p>
+      <a href={monument.url} target="_blank" rel="noopener noreferrer">
         More details
       </a>
 

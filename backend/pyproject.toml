@@ -1,10 +1,11 @@
 [project]
-name = "monudash-backend"
+name = "monudash"
 version = "0.1.0"
 description = "Backend for the MonuDash application"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiosqlite>=0.20.0",
     "beautifulsoup4>=4.13.4",
     "fastapi>=0.116.1",
     "geopandas>=1.1.1",
@@ -16,3 +17,7 @@ dependencies = [
     "sqlmodel>=0.0.24",
     "uvicorn>=0.35.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

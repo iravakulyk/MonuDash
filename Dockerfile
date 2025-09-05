@@ -34,7 +34,7 @@ COPY backend/ .
 
 # Copy frontend build output to /app/static
 COPY --from=frontend-build /frontend/dist /app/static
-COPY resources/monuments_with_coordinates.csv /app/resources/
+COPY resources/monuments.db /app/resources/
 
 # Set backend environment variables
 ENV STATIC_DIR=/app/static \
@@ -44,4 +44,4 @@ ENV STATIC_DIR=/app/static \
 EXPOSE 8000
 
 # Default command to run the backend with uvicorn (ASGI app in main.py)
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD ["uv", "run", "uvicorn", "monudash.main:app", "--host", "0.0.0.0", "--port", "8000"] 
